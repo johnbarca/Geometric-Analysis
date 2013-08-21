@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 import sextante as st
 import numpy as np
 from math import *
-from cmath import phase,rect
+#from cmath import phase,rect
 from PyQt4.QtCore import QVariant
 from qgis.core import *
 
@@ -76,7 +76,6 @@ for enum,feature in enumerate(layer.getFeatures()):
         #mean = degrees(phase(sum(rect(1,radians(d)) for d in B_S)/len(B_S))) #Alternative mean angle?
         #if mean < 0: #How to handle negatives?
           #  mean = 360 - fabs(mean)
-
         x=[]
         y=[]
         for n in B_S:
