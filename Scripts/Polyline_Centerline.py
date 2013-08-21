@@ -67,22 +67,11 @@ progress.setText('Calculating Shortest Paths')
 G = nx.Graph()
 Total2 = len(edges)
 data = set([])
+fet = QgsFeature(fields)
 for enum,FID in enumerate(edges):
     progress.setPercentage(int((100 * enum)/Total2))
     G.add_weighted_edges_from(edges[FID])
-    Index = len(G.nodes())/2
-    source = G.nodes()[Index]
-    for n in range(2):
-        length,path = nx.single_source_dijkstra(G,source,weight='weight')
-        Index = max(length,key=length.get)
-        source = path[Index][-1]
-    fet = QgsFeature(fields)
-    if Method =='ShortestPath':
-        points = [QgsPoint(p[0],p[1]) for p in path[Index]]
-        fet.setGeometry(QgsGeometry.fromPolyline(points))
-        fet[0] = FID
-        writer.addFeature(fet)
-    elif Method == 'InteriorLoop':
+    if Method == 'InteriorLoop':
         curLen = 0
         while len(G) != curLen:
             curLen = len(G)
@@ -91,21 +80,34 @@ for enum,FID in enumerate(edges):
             G.remove_nodes_from(keepNodes)
         data.update(G.nodes())
     else:
-        paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1])        
-        if Method == 'LongestPath':
+        Index = len(G.nodes())/2
+        source = G.nodes()[Index]
+        for n in range(2):
+            length,path = nx.single_source_dijkstra(G,source,weight='weight')
+            Index = max(length,key=length.get)
+            source = path[Index][-1]  
+        if Method =='ShortestPath':
+            points = [QgsPoint(p[0],p[1]) for p in path[Index]]
+            fet.setGeometry(QgsGeometry.fromPolyline(points))
+            fet[0] = FID
+            writer.addFeature(fet)
+        elif Method == 'LongestPath':
+            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1],len(path[Index]))        
             path = max(paths,key=len)
             points = [QgsPoint(p[0],p[1]) for p in path]
             fet.setGeometry(QgsGeometry.fromPolyline(points))
             fet[0] = FID
             writer.addFeature(fet)      
         elif Method == 'AllPaths':
+            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1],len(path[Index]))        
             for path in paths:
                 points = [QgsPoint(p[0],p[1]) for p in path]
                 fet.setGeometry(QgsGeometry.fromPolyline(points))
                 fet[0] = FID
                 writer.addFeature(fet) 
         else:
-            paths = list(paths)
+            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1],len(path[Index]))         
+            paths = list(paths) #Extremely slow!!!
             s = [set(s) for s in paths]
             inter = set(path[Index]).intersection(*s)
             points = []
