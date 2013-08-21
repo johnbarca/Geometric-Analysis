@@ -92,14 +92,14 @@ for enum,FID in enumerate(edges):
             fet[0] = FID
             writer.addFeature(fet)
         elif Method == 'LongestPath':
-            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1],len(path[Index]))        
+            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1])
             path = max(paths,key=len)
             points = [QgsPoint(p[0],p[1]) for p in path]
             fet.setGeometry(QgsGeometry.fromPolyline(points))
             fet[0] = FID
             writer.addFeature(fet)      
         elif Method == 'AllPaths':
-            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1],len(path[Index]))        
+            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1])
             for path in paths:
                 points = [QgsPoint(p[0],p[1]) for p in path]
                 fet.setGeometry(QgsGeometry.fromPolyline(points))
