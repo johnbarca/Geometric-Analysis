@@ -106,7 +106,7 @@ for enum,FID in enumerate(edges):
                 fet[0] = FID
                 writer.addFeature(fet) 
         else:
-            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1],len(path[Index]))         
+            paths=nx.all_simple_paths(G,path[Index][0],path[Index][-1])         
             paths = list(paths) #Extremely slow!!!
             s = [set(s) for s in paths]
             inter = set(path[Index]).intersection(*s)
