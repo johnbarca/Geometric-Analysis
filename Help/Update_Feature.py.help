@@ -1,0 +1,38 @@
+(dp0
+S'Sortby_Optional'
+p1
+VOPTIONAL Sort the "Join Features" seperated by ',' (comma).
+p2
+sS'ALG_DESC'
+p3
+VUpdate/Create a single field based on the aggregate function of another feature. Dependencies - pysal,pandas,numpy
+p4
+sS'Aggregate_Function'
+p5
+VAggregate Functions as supplied by numpy - i.e. mean,sum,max,min
+p6
+sS'Update_Field'
+p7
+VNew field to create or update existing one
+p8
+sS'Target_Feature'
+p9
+VTarget feature to join features
+p10
+sS'Target_Join_Field'
+p11
+VField to joinby in the target feature class
+p12
+sS'Groupby_Fields'
+p13
+VGroupby fields of Join Features seperated by ',' (comma). First element will be used to join with the Target_Join_Field
+p14
+sS'Join_Features'
+p15
+VFeatures to join
+p16
+sS'Expression'
+p17
+VExpression to use as defined by pandas created by the fieldname.function() (case sensititve). i.e. Length.mean() or Length.sum()
+p18
+s.

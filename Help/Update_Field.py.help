@@ -1,0 +1,30 @@
+(dp0
+S'Sortby_Optional'
+p1
+VOPTIONAL Sort the "Join Features" seperated by ',' (comma).
+p2
+sS'ALG_DESC'
+p3
+VUpdate each feature by a pandas expression\u000aDependencies - pysal,pandas
+p4
+sS'Update_Field'
+p5
+VField to update
+p6
+sS'Groupby_Optional'
+p7
+VGroupby fields of Join Features seperated by ',' (comma).
+p8
+sS'ALG_CREATOR'
+p9
+VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
+p10
+sS'Feature'
+p11
+VFeature to update
+p12
+sS'Expression'
+p13
+VExpression to utilize. "g." is required if Groupby Optional is supplied or "df." if no Groupby Optional is supplied. i.e. g.Length.pct_change() or rolling_sum(g,50) see http://pandas.pydata.org/pandas-docs/dev/computation.html#moving-rolling-statistics-moments for additional pandas syntax.
+p14
+s.

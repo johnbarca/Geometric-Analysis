@@ -1,0 +1,38 @@
+(dp0
+S'Sortby_Optional'
+p1
+VOPTIONAL Sort the "Join Features" seperated by ',' (comma).
+p2
+sS'ALG_DESC'
+p3
+VTranspose fields in an attribute of a feature as new attributes with statistics calculated by an aggregate function. Dependencies - pysal,pandas,numpy
+p4
+sS'Aggregate_Function'
+p5
+VAggregate Functions as supplied by numpy - i.e. mean,sum,max,min
+p6
+sS'ALG_CREATOR'
+p7
+VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
+p8
+sS'Target_Feature'
+p9
+VTarget feature
+p10
+sS'Target_Join_Field'
+p11
+VTarget field to join field by
+p12
+sS'Groupby_Fields'
+p13
+VGroupby fields of Join Features seperated by ',' (comma). First element will be used to join with the Target_Join_Field
+p14
+sS'Field'
+p15
+VField Name in the Join_Features feature to calculate statistics on (i.e. Length). Also supported is the pandas .describe() method as Length.describe() where Length is the field name (http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.describe.html) 
+p16
+sS'Join_Features'
+p17
+VFeatures to join
+p18
+s.

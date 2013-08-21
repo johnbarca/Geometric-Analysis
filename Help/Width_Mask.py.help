@@ -1,0 +1,26 @@
+(dp0
+S'Distance'
+p1
+VMaximum width of feature
+p2
+sS'ALG_DESC'
+p3
+V
+p4
+sS'Mask'
+p5
+VOriginal feature mask of centerline
+p6
+sS'Groupby_Field'
+p7
+VUnique FID to divide data
+p8
+sS'Threshold'
+p9
+VWidth measurements to delete if either side of the perpendicular line from the midpoint differs by x percentage -- defined as 100-((min(width)/max(width)) * 100) 
+p10
+sS'Centerline'
+p11
+VCenterline of feature
+p12
+s.

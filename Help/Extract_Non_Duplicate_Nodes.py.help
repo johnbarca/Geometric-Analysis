@@ -1,0 +1,14 @@
+(dp0
+S'ALG_DESC'
+p1
+VExtract nodes from features without duplicates - needed for certain algorithms (i.e. GRASS Voronoi Tessellation)
+p2
+sS'Polygon'
+p3
+V
+p4
+sS'Precision'
+p5
+VUsed to round the point feature to compare duplicates within that parameter precision. Negative values will yield less nodes (i.e. more duplicates found) compared to a positive parameter. 
+p6
+s.

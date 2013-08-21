@@ -1,0 +1,21 @@
+(dp0
+S'Loops'
+p1
+VNumber of iterations to trim nodes where its connection to other nodes is == 1
+p2
+sS'ALG_CREATOR'
+p3
+VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
+p4
+sS'ALG_DESC'
+p5
+VTrim Dangles
+p6
+sS'Voronoi_Lines'
+p7
+V
+p8
+sS'Groupby_Field'
+p9
+g8
+s.

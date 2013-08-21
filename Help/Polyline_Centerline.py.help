@@ -1,0 +1,30 @@
+(dp0
+S'ALG_DESC'
+p1
+VCenterline of a singlepart polyline (i.e. Voronoi Tessellation Lines)
+p2
+sS'ALG_CREATOR'
+p3
+VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
+p4
+sS'Groupby_Field'
+p5
+VUnique FID to divide data
+p6
+sS'ALG_HELP_CREATOR'
+p7
+V
+p8
+sS'Output'
+p9
+VCenterline
+p10
+sS'Voronoi_Lines'
+p11
+VIntersected Voronoi Tessellation Lines
+p12
+sS'Method'
+p13
+VMethods (fastest to slowest):\u000a"ShortestPath" - Longest shortest path\u000a"InteriorLoop" - Interior loops within polygon\u000a"LongestPath" - Longest longest path\u000a"Intersect" - Intersection of all simple paths\u000a"Difference" - Difference between all simple paths\u000a"All" - Shortestpath, Intersect + Difference
+p14
+s.

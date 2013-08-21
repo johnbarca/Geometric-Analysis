@@ -1,0 +1,13 @@
+(dp0
+S'ALG_DESC'
+p1
+VUse a WGS84 projected shapefile and convert to its appropriate UTM zone based on the features centroid point. Dependencies - UTM 
+p2
+sS'Polygon'
+p3
+V
+p4
+sS'Output_Folder'
+p5
+g4
+s.

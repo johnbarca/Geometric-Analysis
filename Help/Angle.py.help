@@ -1,0 +1,14 @@
+(dp0
+S'ALG_DESC'
+p1
+VAngle of feature line
+p2
+sS'Centerline'
+p3
+V
+p4
+sS'Segment_Angle'
+p5
+VCompute the mean individual angles of a polyline sequence
+p6
+s.

@@ -1,0 +1,18 @@
+(dp0
+S'ALG_CREATOR'
+p1
+VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
+p2
+sS'ALG_DESC'
+p3
+VFind the cumulative distance starting from the most distant node. Dependencies - networkx
+p4
+sS'Centerline'
+p5
+V
+p6
+sS'Groupby_Field'
+p7
+VGroupby fields of the Centerline feature seperated by ',' (comma).
+p8
+s.
