@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 from qgis.core import *
 from PyQt4.QtCore import QVariant
 import networkx as nx
-import sextante as st
+import processing as st
 
 layer = st.getobject(Centerline)
 if layer.fieldNameIndex("Distance") == -1:
@@ -40,7 +40,6 @@ if layer.fieldNameIndex("RDistance") == -1:
     layer.dataProvider().addAttributes([QgsField("RDistance",QVariant.Double)])
 if layer.fieldNameIndex("Length") == -1:
     layer.dataProvider().addAttributes([QgsField("RDistance",QVariant.Double)])
-Count = 0
 Total = layer.featureCount()
 edges = {}
 progress.setText('Calculating Edges')

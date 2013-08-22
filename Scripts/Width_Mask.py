@@ -25,7 +25,8 @@
 ##[SAFARI]=group
 ##Centerline=vector
 ##Mask=vector
-##Groupby_Field=field Centerline
+##Calculate_Width_By=field Centerline
+##Calculate_Distance_By=field Centerline
 ##Distance=number 10000
 ##Threshold=number 100
 ##Output=output vector
@@ -35,7 +36,7 @@
 from qgis.core import *
 from PyQt4.QtCore import *
 import networkx as nx
-import sextante as st
+import processing as st
 import math
 
 keepNodes,Lengths = set([]), {}
@@ -58,7 +59,7 @@ for enum,feature in enumerate(layer.getFeatures()):
         pnts1 = points[0][0],points[0][1]
         pnts2 = points[-1][0],points[-1][1]
         Length = feature.geometry().length()
-        ID = feature[Groupby_Field]
+        ID = feature[Calculate_Distance_By]
         feature["Length"] = feature.geometry().length()
         if ID in edges:
             edges[ID].append((pnts1,pnts2,Length))
@@ -85,12 +86,12 @@ for enum,feature in enumerate(layer.getFeatures()):
     try:
         progress.setPercentage(int((100 * enum)/Total))
         pnt = feature.geometry().asPolyline()
-        if feature[Groupby_Field] != ID:
+        if feature[Calculate_Width_By] != ID:
             midx,midy = None,None
         if midx == None:
             startx,starty = pnt[0][0],pnt[0][1]
             midx,midy = pnt[-1][0],pnt[-1][1]
-            ID = feature[Groupby_Field]
+            ID = feature[Calculate_Width_By]
             keepNodes.update([(midx,midy)])
             continue
         endx,endy = pnt[-1][0],pnt[-1][1]
@@ -135,7 +136,7 @@ for enum,feature in enumerate(layer.getFeatures()):
         for field in fields:
             fet[field.name()] = feature[field.name()]
         keepNodes.update([(midx,midy)])
-        FID = feature[Groupby_Field]
+        FID = feature[Calculate_Distance_By]
         FID2 = '%sB'%(FID)
         if FID not in Lengths:
             G.add_weighted_edges_from(edges[FID])
@@ -162,8 +163,9 @@ del writer
 
 progress.setText('Intersecting With Mask')
 Inter = st.runalg("qgis:intersection",Output,Mask,None)
+progress.setText('Intersecting With Maskwer')
 st.runalg("qgis:multiparttosingleparts",Inter["OUTPUT"],Output)
-
+progress.setText('Intersectiask')
 layer = QgsVectorLayer(Output, "Line_Mesh", "ogr")
 
 if layer.fieldNameIndex('Width') == -1:

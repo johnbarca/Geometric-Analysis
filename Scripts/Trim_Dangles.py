@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 #Algorithm body
 #==================================
 import networkx as nx
-import sextante as st
+import processing as st
 from qgis.core import *
 from PyQt4.QtCore import QVariant
 

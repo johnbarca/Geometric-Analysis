@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 ##Centerline=vector
 #Algorithm
 #==================================
-import sextante as st
+import processing as st
 from PyQt4.QtCore import QVariant
 from qgis.core import *
 from math import sqrt

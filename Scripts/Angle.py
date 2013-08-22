@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 
 #Algorithm
 #==================================
-import sextante as st
+import processing as st
 import numpy as np
 from math import *
 #from cmath import phase,rect

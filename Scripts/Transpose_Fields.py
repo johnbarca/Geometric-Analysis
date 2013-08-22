@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 #==================================
 
 import pysal as ps
-import sextante as st
+import processing as st
 from pandas import *
 import numpy as np
 from qgis.core import *

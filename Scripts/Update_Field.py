@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 #Algorithm
 #==================================
 import pysal as ps
-import sextante as st
+import processing as st
 from itertools import izip
 from pandas import *
 from qgis.core import *

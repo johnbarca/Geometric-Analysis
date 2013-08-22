@@ -32,9 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 
 from qgis.core import *
 from PyQt4.QtCore import *
-from itertools import chain
-import networkx as nx
-import sextante as st
+import processing as st
 
 layer = st.getobject(Polygon)
 

@@ -7,20 +7,32 @@ sS'ALG_DESC'
 p3
 V
 p4
-sS'Mask'
+sS'Calculate_Width_By'
 p5
-VOriginal feature mask of centerline
+VWidth is calculated as the mid point between two polylines with the assumption that they are sequential in order. This field paramater ensures that width measurments are calculated seperate as individual features (i.e. breaks) rather than taking the entire polyline as one feature.
 p6
-sS'Groupby_Field'
+sS'ALG_CREATOR'
 p7
-VUnique FID to divide data
+VBjorn Burr Nyberg
 p8
-sS'Threshold'
+sS'Mask'
 p9
-VWidth measurements to delete if either side of the perpendicular line from the midpoint differs by x percentage -- defined as 100-((min(width)/max(width)) * 100) 
+VOriginal feature mask of centerline
 p10
-sS'Centerline'
+sS'Groupby_Field'
 p11
-VCenterline of feature
+VUnique FID to divide data
 p12
+sS'Threshold'
+p13
+VWidth measurements to delete if either side of the perpendicular line from the midpoint differs by x percentage -- defined as 100-((min(width)/max(width)) * 100) 
+p14
+sS'Centerline'
+p15
+VCenterline of feature
+p16
+sS'Calculate_Distance_By'
+p17
+VID to calculate distance of width measurements from the furtherst startpoint of the centerline. 
+p18
 s.
