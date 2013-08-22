@@ -31,10 +31,17 @@ import utm,os
 import processing as st
 from qgis.core import *
 from PyQt4.QtCore import *
+from processing.core.GeoAlgorithmExecutionException import GeoAlgorithmExecutionException as pError
 
 south = ['C','D','E','F','G','H','J','K','L','M']
 
 layer = st.getobject(Polygon)
+
+crs = layer.crs()
+
+if crs.authid() != 'EPSG:4326':
+    raise pError('%s Coordinate System is not supported - only EPSG:4326 (WGS84) Coordinate System is accepted!'%(crs.authid()))
+
 projections = []
 if layer.fieldNameIndex("id") == -1:
     layer.dataProvider().addAttributes([QgsField("id",QVariant.Int)])
@@ -67,7 +74,6 @@ for enum,feature in enumerate(layer.getFeatures()):
         layer.updateFeature(feature)
     except Exception:
         continue
-
 
 layer.commitChanges()
 Total = len(projections) 

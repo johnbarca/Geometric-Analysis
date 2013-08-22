@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 #Definition of inputs and outputs
 #==================================
 ##[SAFARI]=group
-##Voronoi_Lines=vector
+##Polyline=vector
+##Groupby_Field=field Polyline
 ##Loops=number 1
-##Groupby_Field=field Voronoi_Lines
+##Threshold=number 2
+##Threshold_Field_Optional=string
 ##Output=output vector
 
 #Algorithm body
@@ -35,7 +37,7 @@ import processing as st
 from qgis.core import *
 from PyQt4.QtCore import QVariant
 
-layer = st.getobject(Voronoi_Lines)
+layer = st.getobject(Polyline)
 
 Total = layer.featureCount()
 edges = {}
@@ -44,21 +46,22 @@ for enum,feature in enumerate(layer.getFeatures()):
     try:
         progress.setPercentage(int((100 * enum)/Total))
         points = feature.geometry().asPolyline()
-        pnts1 = (float(points[0][0]),float(points[0][1]))
-        pnts2 = (float(points[1][0]),float(points[1][1]))
-        Length = feature.geometry().length()
+        pnts1 = points[0][0],points[0][1]
+        pnts2 = points[-1][0],points[-1][1]
+        if Threshold_Field_Optional:
+            Weight = feature[Threshold_Field_Optional]
+        else:
+            Weight = 1
         ID = feature[Groupby_Field]
         if ID in edges:
-            edges[ID].append((pnts1,pnts2,Length))
+            edges[ID].append((pnts1,pnts2,Weight))
         else:
-            edges[ID] = [(pnts1,pnts2,Length)]
+            edges[ID] = [(pnts1,pnts2,Weight)]
     except Exception:
         continue ##Possible Collapsed Polyline?
 
-fields = QgsFields()
-fields.append( QgsField('FID', QVariant.Int ))
+fields= layer.pendingFields()
 fet = QgsFeature(fields)
-
 writer = QgsVectorFileWriter(Output, "CP1250", fields, layer.dataProvider().geometryType(),layer.crs(), "ESRI Shapefile")
 
 progress.setText('Triming Lines')
@@ -68,9 +71,9 @@ data = set([])
 for enum,FID in enumerate(edges):
     progress.setPercentage(int((100 * enum)/Total2))
     G.add_weighted_edges_from(edges[FID])
-    for n in range(Loops):
-        degree = G.degree()
-        keepNodes = [k for k,v in degree.iteritems() if v == 1]
+    for n in range(Loops):      
+        degree = G.degree(weight='weight')
+        keepNodes = [k for k,v in degree.iteritems() if v < Threshold]
         G.remove_nodes_from(keepNodes)
     data.update(G.nodes())  
     
@@ -80,14 +83,15 @@ progress.setText('Creating Segments')
 for enum,feature in enumerate(layer.getFeatures()):
     progress.setPercentage(int((100 * enum)/Total))
     points = feature.geometry().asPolyline()
-    if len(points) != 2: #Possible Collapsed Polyline?
+    if len(points) < 2: #Possible Collapsed Polyline?
         continue
-    pnts1 = (float(points[0][0]),float(points[0][1]))
-    pnts2 = (float(points[1][0]),float(points[1][1]))
+    pnts1 = points[0][0],points[0][1]
+    pnts2 = points[-1][0],points[-1][1]
     if pnts1 in data and pnts2 in data:
-        points = [QgsPoint(pnts1[0],pnts1[1]),QgsPoint(pnts2[0],pnts2[1])]
+        points = [QgsPoint(pnt.x(),pnt.y()) for pnt in points]
         fet.setGeometry(QgsGeometry.fromPolyline(points))
-        fet[0] = feature[Groupby_Field]
+        for field in fields:
+            fet[field.name()] = feature[field.name()]
         writer.addFeature(fet)
 
 del writer

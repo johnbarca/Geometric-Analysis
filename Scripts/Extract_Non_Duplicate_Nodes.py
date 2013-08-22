@@ -47,14 +47,20 @@ Total = layer.featureCount()
 progress.setText('Extracting Nodes')
 for enum,feature in enumerate(layer.getFeatures()):
     progress.setPercentage(int((100 * enum)/Total))
-    try:
-        geom = feature.geometry().asPolygon()
-    except Exception:
-        try:
-            geom = feature.geometry().asPolyline()
-        except Exception:
-            continue
-    geom = list(chain(*geom))
+    geomType = feature.geometry()
+    if geomType.type() == QGis.Polygon:
+        if geomType.isMultipart():
+            geom = geomType.asMultiPolygon()
+            geom = list(chain(*chain(*geom)))
+        else:
+            geom = geomType.asPolygon()
+            geom = list(chain(*geom))
+    elif geomType.type() == QGis.Line:
+        if geomType.isMultipart():
+            geom = geomType.asMultiPolyline()
+            geom = list(chain(*geom))
+        else:
+            geom = geomType.asPolyline()
     for points in geom:
         if (round(points.x(),Precision),round(points.y(),Precision)) not in keepNodes:   
                 pnt = QgsGeometry.fromPoint(QgsPoint(points.x(),points.y()))

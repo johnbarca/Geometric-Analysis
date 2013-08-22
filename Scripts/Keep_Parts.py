@@ -24,16 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 #==================================
 ##[SAFARI]=group
 ##Polygon=vector
+##Singlepart=boolean True
 ##Area_Threshold=number 0
 ##Output=output vector
 
 #Algorithm body
 #==================================
-#TODO add multipolygon support/multipart/singlepart support
 
 from qgis.core import *
 from PyQt4.QtCore import *
-from itertools import chain
 import processing as st
 
 layer = st.getobject(Polygon)
@@ -47,16 +46,53 @@ Total = layer.featureCount()
 progress.setText('Extracting Parts')
 for enum,feature in enumerate(layer.getFeatures()):
     progress.setPercentage(int((100 * enum)/Total))
-    geom = feature.geometry().asPolygon()
-    for part in geom[1:]:
-        geom = [[QgsPoint(pnt.x(),pnt.y()) for pnt in part]]
-        polygon = QgsGeometry.fromPolygon(geom)
-        for field in fields:
-            fet[field.name()] = feature[field.name()]
-        fet.setGeometry(polygon)
-        writer.addFeature(fet)
+    geomType = feature.geometry()
+    if geomType.isMultipart():
+        multiPart = geomType.asMultiPolygon()
+        geom = []
+        for part in multiPart:
+            if len(part) == 1:
+                continue # No rings
+            for ring in part[1:]:            
+                if Singlepart:
+                    geom = [[QgsPoint(pnt.x(),pnt.y()) for pnt in ring]]   
+                    polygon = QgsGeometry.fromPolygon(geom)
+                    for field in fields:
+                        fet[field.name()] = feature[field.name()]
+                    fet.setGeometry(polygon)
+                    writer.addFeature(fet)
+                else:
+                    geom.append([QgsPoint(pnt.x(),pnt.y()) for pnt in ring])
+        if not Singlepart:
+            polygon = QgsGeometry.fromPolygon(geom)
+            for field in fields:
+                fet[field.name()] = feature[field.name()]
+            fet.setGeometry(polygon)
+            writer.addFeature(fet)
+    else:
+        geom = []
+        part = geomType.asPolygon()
+        if len(part) == 1:
+            continue # No rings
+        for ring in part[1:]:            
+            if Singlepart:
+                geom = [[QgsPoint(pnt.x(),pnt.y()) for pnt in ring]]   
+                polygon = QgsGeometry.fromPolygon(geom)
+                for field in fields:
+                    fet[field.name()] = feature[field.name()]
+                fet.setGeometry(polygon)
+                writer.addFeature(fet)
+            else:
+                geom.append([QgsPoint(pnt.x(),pnt.y()) for pnt in ring])
+        if not Singlepart:
+            polygon = QgsGeometry.fromPolygon(geom)
+            for field in fields:
+                fet[field.name()] = feature[field.name()]
+            fet.setGeometry(polygon)
+            writer.addFeature(fet)
 
 del writer
+
 layer = st.getobject(Output)
 layer.startEditing()
 if Area_Threshold != 0: 
