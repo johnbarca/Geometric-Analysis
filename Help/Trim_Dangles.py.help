@@ -1,21 +1,32 @@
 (dp0
-S'Loops'
+S'ALG_DESC'
 p1
-VNumber of iterations to trim nodes where its connection to other nodes is == 1
-p2
-sS'ALG_CREATOR'
-p3
-VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
-p4
-sS'ALG_DESC'
-p5
 VTrim Dangles
+p2
+sS'Threshold_Field_Optional'
+p3
+VOptional parameter to remove dangles based on a threshold of an attribute
+p4
+sS'ALG_CREATOR'
+p5
+VBjorn Burr Nyberg\u000abjorn.nyberg@uni.no
 p6
-sS'Voronoi_Lines'
+sS'Groupby_Field'
 p7
 V
 p8
-sS'Groupby_Field'
+sS'Threshold'
 p9
+VThreshold for loops
+p10
+sS'Polyline'
+p11
+g8
+sS'Loops'
+p12
+VNumber of iterations to trim nodes where its connection to other nodes is < Threhsold
+p13
+sS'Voronoi_Lines'
+p14
 g8
 s.
