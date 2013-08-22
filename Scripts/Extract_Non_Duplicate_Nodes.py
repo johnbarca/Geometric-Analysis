@@ -67,5 +67,6 @@ for enum,feature in enumerate(layer.getFeatures()):
                 fet.setGeometry(pnt)
                 writer.addFeature(fet)
                 keepNodes.update([(round(points.x(),Precision),round(points.y(),Precision))])
-                
+
+del writer
             
