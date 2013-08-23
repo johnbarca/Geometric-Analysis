@@ -163,9 +163,7 @@ del writer
 
 progress.setText('Intersecting With Mask')
 Inter = st.runalg("qgis:intersection",Output,Mask,None)
-progress.setText('Intersecting With Maskwer')
 st.runalg("qgis:multiparttosingleparts",Inter["OUTPUT"],Output)
-progress.setText('Intersectiask')
 layer = QgsVectorLayer(Output, "Line_Mesh", "ogr")
 
 if layer.fieldNameIndex('Width') == -1:
