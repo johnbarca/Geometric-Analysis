@@ -3,6 +3,7 @@
 #University of Bergen
 #Contact bjorn.nyberg@uni.no
 #Copyright 2013
+#Modified from http://ceg-sense.ncl.ac.uk/geoanorak/code/pythontransects.html
 #==================================
 
 '''This program is free software: you can redistribute it and/or modify
