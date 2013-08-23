@@ -78,7 +78,7 @@ writer = QgsVectorFileWriter(Output, "CP1250", fields, layer.dataProvider().geom
 
 fet = QgsFeature(fields)
 G = nx.Graph()
-ID = None
+ID = False
 
 Distance = Distance/2
 progress.setText('Calculating Perpendicular Lines')
@@ -86,9 +86,9 @@ for enum,feature in enumerate(layer.getFeatures()):
     try:
         progress.setPercentage(int((100 * enum)/Total))
         pnt = feature.geometry().asPolyline()
-        if feature[Calculate_Width_By] != ID:
-            midx,midy = None,None
-        if midx == None:
+        if ID == False:
+            midx = False
+        if midx == False:
             startx,starty = pnt[0][0],pnt[0][1]
             midx,midy = pnt[-1][0],pnt[-1][1]
             ID = feature[Calculate_Width_By]
