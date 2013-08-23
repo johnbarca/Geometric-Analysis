@@ -51,7 +51,6 @@ edges = {}
 
 Total = layer.featureCount()
 progress.setText('Calculating Edges')
-layer.startEditing()
 for enum,feature in enumerate(layer.getFeatures()):
     progress.setPercentage(int((100 * enum)/Total))
     try:
@@ -60,16 +59,12 @@ for enum,feature in enumerate(layer.getFeatures()):
         pnts2 = points[-1][0],points[-1][1]
         Length = feature.geometry().length()
         ID = feature[Calculate_Distance_By]
-        feature["Length"] = feature.geometry().length()
         if ID in edges:
             edges[ID].append((pnts1,pnts2,Length))
         else:
             edges[ID] = [(pnts1,pnts2,Length)]
-        layer.updateFeature(feature)
     except Exception:
         continue ##Possible Collapsed Polyline?
-
-layer.commitChanges()
 
 fields= layer.pendingFields()
 crs = layer.crs()
