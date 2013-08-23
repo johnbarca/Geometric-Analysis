@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 ##[SAFARI]=group
 ##Centerline=vector
 ##Groupby_Field=field Centerline
+##Custom_Weight_Field_Optional=string
 
 #Algorithm body
 #==================================
@@ -50,7 +51,10 @@ for enum,feature in enumerate(layer.getFeatures()):
         points = feature.geometry().asPolyline()
         pnts1 = points[0][0],points[0][1]
         pnts2 = points[-1][0],points[-1][1]
-        Length = feature.geometry().length()
+        if Custom_Weight_Field_Optional:
+            Length = float(feature[Custom_Weight_Field_Optional])
+        else:
+            Length = feature.geometry().length()
         ID = feature[Groupby_Field]
         if ID in edges:
             edges[ID].append((pnts1,pnts2,Length))
