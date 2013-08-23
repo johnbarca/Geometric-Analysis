@@ -27,6 +27,7 @@
 ##Mask=vector
 ##Calculate_Width_By=field Centerline
 ##Calculate_Distance_By=field Centerline
+##Custom_Weight_Field_Optional=string 
 ##Distance=number 10000
 ##Threshold=number 100
 ##Output=output vector
@@ -48,7 +49,8 @@ if layer.fieldNameIndex("Distance") == -1:
 if layer.fieldNameIndex("RDistance") == -1:
     layer.dataProvider().addAttributes([QgsField("RDistance",QVariant.Double)])
 edges = {}
-
+layer.startEditing()
+layer.commitChanges() #Force creation of fields mentioned above
 Total = layer.featureCount()
 progress.setText('Calculating Edges')
 for enum,feature in enumerate(layer.getFeatures()):
@@ -57,7 +59,10 @@ for enum,feature in enumerate(layer.getFeatures()):
         points = feature.geometry().asPolyline()
         pnts1 = points[0][0],points[0][1]
         pnts2 = points[-1][0],points[-1][1]
-        Length = feature.geometry().length()
+        if Custom_Weight_Field_Optional:
+            Length = float(feature[Custom_Weight_Field_Optional])
+        else:
+            Length = feature.geometry().length()
         ID = feature[Calculate_Distance_By]
         if ID in edges:
             edges[ID].append((pnts1,pnts2,Length))
