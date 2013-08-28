@@ -45,7 +45,7 @@ for enum,feature in enumerate(layer.getFeatures()):
         progress.setPercentage(int((100 * enum)/Total))
         points = feature.geometry().asPolyline()
         pnts1 = (float(points[0][0]),float(points[0][1]))
-        pnts2 = (float(points[1][0]),float(points[1][1]))
+        pnts2 = (float(points[-1][0]),float(points[-1][1]))
         Length = feature.geometry().length()
         ID = feature[Groupby_Field]
         if ID in edges:
@@ -211,7 +211,7 @@ if Method == 'InteriorLoop':
         if len(points) != 2: #Possible Collapsed Polyline?
             continue
         pnts1 = (float(points[0][0]),float(points[0][1]))
-        pnts2 = (float(points[1][0]),float(points[1][1]))
+        pnts2 = (float(points[-1][0]),float(points[-1][1]))
         if pnts1 in data and pnts2 in data:
             points = [QgsPoint(pnts1[0],pnts1[1]),QgsPoint(pnts2[0],pnts2[1])]
             fet.setGeometry(QgsGeometry.fromPolyline(points))
