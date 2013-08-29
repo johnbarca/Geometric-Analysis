@@ -80,7 +80,7 @@ for enum,feature in enumerate(layer.getFeatures()):
         endx,endy = points[-1][0],points[-1][1]
         ID = feature[Groupby_Field]
         if ID not in Lengths:
-            G.add_weighted_edges_from(edges[ID])
+            G = edges(ID)
             Source = G.nodes()[0]
             for n in range(2):
                 Length,Path = nx.single_source_dijkstra(G,Source,weight='weight')
