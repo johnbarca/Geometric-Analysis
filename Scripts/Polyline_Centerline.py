@@ -39,6 +39,7 @@ layer = st.getobject(Voronoi_Lines)
 
 Total = layer.featureCount()
 edges = {}
+FIDs = []
 progress.setText('Calculating Edges')
 for enum,feature in enumerate(layer.getFeatures()):
     try:
@@ -49,9 +50,12 @@ for enum,feature in enumerate(layer.getFeatures()):
         Length = feature.geometry().length()
         ID = feature[Groupby_Field]
         if ID in edges:
-            edges[ID].append((pnts1,pnts2,Length))
+            edges[ID] = edges[ID].add_edge(pnts1,pnts2,weight=Length)
         else:
-            edges[ID] = [(pnts1,pnts2,Length)]
+            Graph = nx.Graph()
+            Graph.add_edge(pnts1,pnts2,weight=Length)
+            edges[ID] = Graph
+            FIDs.append(ID)
     except Exception:
         continue ##Possible Collapsed Polyline?
 
@@ -68,9 +72,9 @@ G = nx.Graph()
 Total2 = len(edges)
 data = set([])
 fet = QgsFeature(fields)
-for enum,FID in enumerate(edges):
+for enum,FID in enumerate(FIDs):
     progress.setPercentage(int((100 * enum)/Total2))
-    G.add_weighted_edges_from(edges[FID])
+    G = edges[FID]
     if Method == 'InteriorLoop':
         curLen = 0
         while len(G) != curLen:
@@ -200,7 +204,7 @@ for enum,FID in enumerate(edges):
                         fet[1] = 0
                         writer.addFeature(fet)
                         points2 = []            
-    
+    del edges(FID)
     G.clear()
 
 if Method == 'InteriorLoop':
