@@ -57,12 +57,15 @@ for enum,feature in enumerate(layer.getFeatures()):
             Length = feature.geometry().length()
         ID = feature[Groupby_Field]
         if ID in edges:
-            edges[ID].append((pnts1,pnts2,Length))
+            edges[ID] = edges[ID].add_edge(pnts1,pnts2,weight=Length)
         else:
-            edges[ID] = [(pnts1,pnts2,Length)]
-        layer.updateFeature(feature)
+            Graph = nx.Graph()
+            Graph.add_edge(pnts1,pnts2,weight=Length)
+            edges[ID] = Graph
     except Exception:
         continue ##Possible Collapsed Polyline?
+        layer.updateFeature(feature)
+
 
 layer.commitChanges()
 Lengths = {}
