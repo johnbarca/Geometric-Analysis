@@ -57,7 +57,7 @@ for enum,feature in enumerate(layer.getFeatures()):
             Length = feature.geometry().length()
         ID = feature[Groupby_Field]
         if ID in edges:
-            edges[ID] = edges[ID].add_edge(pnts1,pnts2,weight=Length)
+            edges[ID].add_edge(pnts1,pnts2,weight=Length)
         else:
             Graph = nx.Graph()
             Graph.add_edge(pnts1,pnts2,weight=Length)
@@ -69,7 +69,6 @@ for enum,feature in enumerate(layer.getFeatures()):
 
 layer.commitChanges()
 Lengths = {}
-G = nx.Graph()
 progress.setText('Updating Features')
 layer.startEditing()
 for enum,feature in enumerate(layer.getFeatures()):
