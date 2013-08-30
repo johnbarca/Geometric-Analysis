@@ -41,7 +41,6 @@ layer = st.getobject(Polyline)
 
 Total = layer.featureCount()
 edges = {}
-FIDs = []
 progress.setText('Calculating Edges')
 for enum,feature in enumerate(layer.getFeatures()):
     try:
@@ -60,7 +59,6 @@ for enum,feature in enumerate(layer.getFeatures()):
             Graph = nx.Graph()
             Graph.add_edge(pnts1,pnts2,weight=Weight)
             edges[ID] = Graph
-            FIDs.append(ID)
     except Exception:
         continue ##Possible Collapsed Polyline?
 
@@ -69,7 +67,6 @@ fet = QgsFeature(fields)
 writer = QgsVectorFileWriter(Output, "CP1250", fields, layer.dataProvider().geometryType(),layer.crs(), "ESRI Shapefile")
 
 progress.setText('Triming Lines')
-G = nx.Graph()
 Total2 = len(edges)
 data = set([])
 for enum,FID in enumerate(edges):
