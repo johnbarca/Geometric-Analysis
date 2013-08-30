@@ -69,7 +69,8 @@ progress.setText('Calculating Shortest Paths')
 Total2 = len(edges)
 data = set([])
 fet = QgsFeature(fields)
-for enum,G in enumerate(edges):
+for enum,FID in enumerate(edges):
+    G = edges[FID]
     progress.setPercentage(int((100 * enum)/Total2))
     if Method == 'InteriorLoop':
         curLen = 0
