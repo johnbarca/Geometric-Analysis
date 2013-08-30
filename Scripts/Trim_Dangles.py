@@ -55,10 +55,10 @@ for enum,feature in enumerate(layer.getFeatures()):
             Weight = 1
         ID = feature[Groupby_Field]
         if ID in edges:
-            edges[ID] = edges[ID].add_edge(pnts1,pnts2,weight=Length)
+            edges[ID].add_edge(pnts1,pnts2,weight=Weight)
         else:
             Graph = nx.Graph()
-            Graph.add_edge(pnts1,pnts2,weight=Length)
+            Graph.add_edge(pnts1,pnts2,weight=Weight)
             edges[ID] = Graph
             FIDs.append(ID)
     except Exception:
@@ -72,7 +72,7 @@ progress.setText('Triming Lines')
 G = nx.Graph()
 Total2 = len(edges)
 data = set([])
-for enum,FID in enumerate(FIDs):
+for enum,FID in enumerate(edges):
     progress.setPercentage(int((100 * enum)/Total2))
     G = edges[FID]
     for n in range(Loops):      
@@ -80,8 +80,7 @@ for enum,FID in enumerate(FIDs):
         keepNodes = [k for k,v in degree.iteritems() if v < Threshold]
         G.remove_nodes_from(keepNodes)
     data.update(G.nodes())  
-    
-    del edges(FID)
+
     G.clear()
 
 progress.setText('Creating Segments')
