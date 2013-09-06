@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 
 from qgis.core import *
 from PyQt4.QtCore import *
-import sextante as st
+import processing as st
 
 layer = st.getobject(Polygon)
 
@@ -54,24 +54,19 @@ for enum,feature in enumerate(layer.getFeatures()):
             if len(part) == 1:
                 continue # No rings
             for ring in part[1:]:            
+                data = [[QgsPoint(pnt.x(),pnt.y()) for pnt in ring]]   
+                polygon = QgsGeometry.fromPolygon(data)
+                area = polygon.area()
+                if Area_Threshold != 0 and area < Area_Threshold:
+                    continue
                 if Singlepart:
-                    geom = [[QgsPoint(pnt.x(),pnt.y()) for pnt in ring]]   
-                    polygon = QgsGeometry.fromPolygon(geom)
                     for field in fields:
                         fet[field.name()] = feature[field.name()]
-                    length = polygon.area()
-                    if Area_Threshold != 0 and length < Area_Threshold:
-                        continue
                     fet.setGeometry(polygon)
                     writer.addFeature(fet)
                 else:
-                    data = [QgsPoint(pnt.x(),pnt.y()) for pnt in ring]
-                    polygon = QgsGeometry.fromPolygon(data)
-                    length = polygon.area()
-                    if Area_Threshold != 0 and length < Area_Threshold:
-                        continue
                     geom.append(data)
-        if not Singlepart:
+        if len(geom) > 0:
             polygon = QgsGeometry.fromPolygon(geom)
             for field in fields:
                 fet[field.name()] = feature[field.name()]
@@ -82,25 +77,20 @@ for enum,feature in enumerate(layer.getFeatures()):
         part = geomType.asPolygon()
         if len(part) == 1:
             continue # No rings
-        for ring in part[1:]:            
+        for ring in part[1:]:
+            data = [[QgsPoint(pnt.x(),pnt.y()) for pnt in ring]]
+            polygon = QgsGeometry.fromPolygon(data)
+            area = polygon.area()
+            if Area_Threshold != 0 and area < Area_Threshold:
+                continue
             if Singlepart:
-                geom = [[QgsPoint(pnt.x(),pnt.y()) for pnt in ring]]   
-                polygon = QgsGeometry.fromPolygon(geom)
                 for field in fields:
                     fet[field.name()] = feature[field.name()]
-                length = polygon.area()
-                if Area_Threshold != 0 and length < Area_Threshold:
-                    continue
                 fet.setGeometry(polygon)
                 writer.addFeature(fet)
             else:
-                data = [QgsPoint(pnt.x(),pnt.y()) for pnt in ring]
-                polygon = QgsGeometry.fromPolygon(data)
-                length = polygon.area()
-                if Area_Threshold != 0 and length < Area_Threshold:
-                    continue
                 geom.append(data)
-        if not Singlepart:
+        if len(geom) > 0:
             polygon = QgsGeometry.fromPolygon(geom)
             for field in fields:
                 fet[field.name()] = feature[field.name()]
