@@ -65,7 +65,7 @@ for enum,feature in enumerate(layer.getFeatures()):
                     fet.setGeometry(polygon)
                     writer.addFeature(fet)
                 else:
-                    geom.append(data)
+                    geom.append(data[0])
         if len(geom) > 0:
             polygon = QgsGeometry.fromPolygon(geom)
             for field in fields:
@@ -89,7 +89,7 @@ for enum,feature in enumerate(layer.getFeatures()):
                 fet.setGeometry(polygon)
                 writer.addFeature(fet)
             else:
-                geom.append(data)
+                geom.append(data[0])
         if len(geom) > 0:
             polygon = QgsGeometry.fromPolygon(geom)
             for field in fields:
