@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 
 from qgis.core import *
 from PyQt4.QtCore import *
-import processing as st
+import sextante as st
 
 layer = st.getobject(Polygon)
 
@@ -59,10 +59,18 @@ for enum,feature in enumerate(layer.getFeatures()):
                     polygon = QgsGeometry.fromPolygon(geom)
                     for field in fields:
                         fet[field.name()] = feature[field.name()]
+                    length = polygon.area()
+                    if Area_Threshold != 0 and length < Area_Threshold:
+                        continue
                     fet.setGeometry(polygon)
                     writer.addFeature(fet)
                 else:
-                    geom.append([QgsPoint(pnt.x(),pnt.y()) for pnt in ring])
+                    data = [QgsPoint(pnt.x(),pnt.y()) for pnt in ring]
+                    polygon = QgsGeometry.fromPolygon(data)
+                    length = polygon.area()
+                    if Area_Threshold != 0 and length < Area_Threshold:
+                        continue
+                    geom.append(data)
         if not Singlepart:
             polygon = QgsGeometry.fromPolygon(geom)
             for field in fields:
@@ -80,26 +88,22 @@ for enum,feature in enumerate(layer.getFeatures()):
                 polygon = QgsGeometry.fromPolygon(geom)
                 for field in fields:
                     fet[field.name()] = feature[field.name()]
+                length = polygon.area()
+                if Area_Threshold != 0 and length < Area_Threshold:
+                    continue
                 fet.setGeometry(polygon)
                 writer.addFeature(fet)
             else:
-                geom.append([QgsPoint(pnt.x(),pnt.y()) for pnt in ring])
+                data = [QgsPoint(pnt.x(),pnt.y()) for pnt in ring]
+                polygon = QgsGeometry.fromPolygon(data)
+                length = polygon.area()
+                if Area_Threshold != 0 and length < Area_Threshold:
+                    continue
+                geom.append(data)
         if not Singlepart:
             polygon = QgsGeometry.fromPolygon(geom)
             for field in fields:
                 fet[field.name()] = feature[field.name()]
             fet.setGeometry(polygon)
             writer.addFeature(fet)
-
 del writer
-
-layer = st.getobject(Output)
-layer.startEditing()
-if Area_Threshold != 0: 
-    progress.setText('Updating Features')
-    for enum,feature in enumerate(layer.getFeatures()):
-        progress.setPercentage(int((100 * enum)/Total))
-        if feature.geometry().area() < Area_Threshold:
-            layer.deleteFeature(feature.id())
-layer.commitChanges()
-        
