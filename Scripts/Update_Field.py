@@ -41,7 +41,7 @@ dbf = Feature.replace('.shp','.dbf')
 dbf = ps.open(dbf)
 d = {col: dbf.by_col(col) for col in dbf.header}
 df = DataFrame(d)
-layer = st.getobject(Feature)
+layer = st.getObject(Feature)
 
 progress.setText('Calculating Fields to Update')
 if Groupby_Optional:

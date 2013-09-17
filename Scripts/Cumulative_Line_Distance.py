@@ -34,7 +34,7 @@ from PyQt4.QtCore import QVariant
 import networkx as nx
 import processing as st
 
-layer = st.getobject(Centerline)
+layer = st.getObject(Centerline)
 if layer.fieldNameIndex("Distance") == -1:
     layer.dataProvider().addAttributes([QgsField("Distance",QVariant.Double)])
 if layer.fieldNameIndex("RDistance") == -1:

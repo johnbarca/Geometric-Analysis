@@ -37,7 +37,7 @@ import processing as st
 from qgis.core import *
 from PyQt4.QtCore import QVariant
 
-layer = st.getobject(Polyline)
+layer = st.getObject(Polyline)
 
 Total = layer.featureCount()
 edges = {}

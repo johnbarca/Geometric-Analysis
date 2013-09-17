@@ -76,7 +76,7 @@ for n,g in df.groupby(Groupby_Fields):
             if FID not in fields:
                 fields.update(FID)
 
-layer = st.getobject(Target_Feature)
+layer = st.getObject(Target_Feature)
 if '.describe()' in Field:
     fields = [ "t_count","count","mean","std","25%","50%","75%","min","max"]
 

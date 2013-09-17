@@ -35,7 +35,7 @@ from math import *
 from PyQt4.QtCore import QVariant
 from qgis.core import *
 
-layer = st.getobject(Centerline)
+layer = st.getObject(Centerline)
 
 if layer.fieldNameIndex("Angle") == -1:
     layer.dataProvider().addAttributes([QgsField("Angle",QVariant.Double)])

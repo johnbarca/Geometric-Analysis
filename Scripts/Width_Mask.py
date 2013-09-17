@@ -42,7 +42,7 @@ import processing as st
 import math
 
 keepNodes,Lengths = set([]), {}
-layer = st.getobject(Centerline)
+layer = st.getObject(Centerline)
 if layer.fieldNameIndex("Length") == -1:
     layer.dataProvider().addAttributes([QgsField("Length",QVariant.Double)])
 if layer.fieldNameIndex("Distance") == -1:

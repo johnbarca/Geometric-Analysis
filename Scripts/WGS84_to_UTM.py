@@ -35,7 +35,7 @@ from processing.core.GeoAlgorithmExecutionException import GeoAlgorithmExecution
 
 south = ['C','D','E','F','G','H','J','K','L','M']
 
-layer = st.getobject(Polygon)
+layer = st.getObject(Polygon)
 
 crs = layer.crs()
 

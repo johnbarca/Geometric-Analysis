@@ -35,7 +35,7 @@ import processing as st
 from qgis.core import *
 from PyQt4.QtCore import QVariant
 
-layer = st.getobject(Voronoi_Lines)
+layer = st.getObject(Voronoi_Lines)
 
 Total = layer.featureCount()
 edges = {}
