@@ -7,17 +7,15 @@
 #==================================
 
 '''This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-    
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-    
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.'''
 
 #==================================
 
@@ -28,9 +26,10 @@
 ##Mask=vector
 ##Calculate_Width_By=field Centerline
 ##Calculate_Distance_By=field Centerline
-##Custom_Weight_Field_Optional=string 
+##Custom_Weight_Field_Optional=string
 ##Distance=number 10000
 ##Threshold=number 100
+##Original=output vector
 ##Output=output vector
 
 #Algorithm body
@@ -75,7 +74,7 @@ for enum,feature in enumerate(layer.getFeatures()):
 fields= layer.pendingFields()
 crs = layer.crs()
 
-writer = QgsVectorFileWriter(Output, "CP1250", fields, layer.dataProvider().geometryType(),layer.crs(), "ESRI Shapefile")
+writer = QgsVectorFileWriter(Original, "CP1250", fields, layer.dataProvider().geometryType(),layer.crs(), "ESRI Shapefile")
 
 fet = QgsFeature(fields)
 G = nx.Graph()
@@ -158,9 +157,8 @@ for enum,feature in enumerate(layer.getFeatures()):
     writer.addFeature(fet)
 
 del writer
-
 progress.setText('Intersecting With Mask')
-Inter = st.runalg("qgis:intersection",Output,Mask,None)
+Inter=st.runalg("qgis:intersection",Original,Mask,None)
 st.runalg("qgis:multiparttosingleparts",Inter["OUTPUT"],Output)
 layer = QgsVectorLayer(Output, "Line_Mesh", "ogr")
 
@@ -171,27 +169,24 @@ Total = layer.featureCount()
 progress.setText('Calculating Widths')
 layer.startEditing()
 for enum,feature in enumerate(layer.getFeatures()):
-    try:
-        progress.setPercentage(int((100 * enum)/Total))
-        points = feature.geometry().asPolyline()
-        if len(points) != 3: #Check to make sure that two lines have been made
+    progress.setPercentage(int((100 * enum)/Total))
+    points = feature.geometry().asPolyline()
+    if len(points) != 3: #Check to make sure that two lines have been made
+        layer.deleteFeature(feature.id())
+        continue
+    mid = (float(points[1][0]),float(points[1][1]))
+    if mid in keepNodes:
+        startx,starty = float(points[0][0]),float(points[0][1])
+        endx,endy = float(points[2][0]),float(points[2][1])
+        midx,midy = mid[0],mid[1]
+        d = [math.sqrt(((startx-midx)**2)+((starty-midy)**2)),math.sqrt(((endx-midx)**2)+((endy-midy)**2))] #Distances
+        e = 100-((min(d)/max(d)) * 100)
+        if e > Threshold:
             layer.deleteFeature(feature.id())
-            continue
-        mid = (float(points[1][0]),float(points[1][1]))
-        if mid in keepNodes:
-            startx,starty = float(points[0][0]),float(points[0][1])
-            endx,endy = float(points[2][0]),float(points[2][1])
-            midx,midy = mid[0],mid[1]
-            d = [math.sqrt(((startx-midx)**2)+((starty-midy)**2)),math.sqrt(((endx-midx)**2)+((endy-midy)**2))] #Distances
-            e = 100-((min(d)/max(d)) * 100)
-            if e > Threshold:
-                layer.deleteFeature(feature.id())
-            else:
-                feature["Width"]=feature.geometry().length()
-                layer.updateFeature(feature)
         else:
-            layer.deleteFeature(feature.id())
-    except Exception:
-        pass
+            feature["Width"]=feature.geometry().length()
+            layer.updateFeature(feature)
+    else:
+        layer.deleteFeature(feature.id())
 
 layer.commitChanges()
