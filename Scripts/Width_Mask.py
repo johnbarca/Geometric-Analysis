@@ -84,80 +84,79 @@ midx = False
 Distance = Distance/2
 progress.setText('Calculating Perpendicular Lines')
 for enum,feature in enumerate(layer.getFeatures()):
-    try:
-        progress.setPercentage(int((100 * enum)/Total))
-        pnt = feature.geometry().asPolyline()
-        if midx == False:
-            startx,starty = pnt[0][0],pnt[0][1]
-            midx,midy = pnt[-1][0],pnt[-1][1]
-            ID = feature[Calculate_Width_By]
-            keepNodes.update([(midx,midy)])
-            continue
-        endx,endy = pnt[-1][0],pnt[-1][1]
-        if starty==endy or startx==endx: #if horizontal or vertical
-            if starty == endy:
-                y1 = midx + Distance
-                y2 = midy - Distance
-                x1 = midx
-                x2 = midx
-            if startx == endx:
-                y1 = midy
-                y2 = midy
+
+    progress.setPercentage(int((100 * enum)/Total))
+    pnt = feature.geometry().asPolyline()
+    if midx == False:
+        startx,starty = pnt[0][0],pnt[0][1]
+        midx,midy = pnt[-1][0],pnt[-1][1]
+        ID = feature[Calculate_Width_By]
+        keepNodes.update([(midx,midy)])
+        continue
+    endx,endy = pnt[-1][0],pnt[-1][1]
+    if starty==endy or startx==endx: #if horizontal or vertical
+        if starty == endy:
+            y1 = midx + Distance
+            y2 = midy - Distance
+            x1 = midx
+            x2 = midx
+        if startx == endx:
+            y1 = midy
+            y2 = midy
+            x1 = midx + Distance
+            x2 = midx - Distance
+    else:
+        m = ((starty - endy)/(startx - endx)) #Slope
+        nr = -1*((startx - endx)/(starty - endy))#Negative Reciprocal
+        if m > 0: #Transpose line depending on quadrant based on m
+            if m >= 1:
+                y1 = nr*(Distance)+ midy
+                y2 = nr*(-Distance) + midy
                 x1 = midx + Distance
                 x2 = midx - Distance
-        else:
-            m = ((starty - endy)/(startx - endx)) #Slope
-            nr = -1*((startx - endx)/(starty - endy))#Negative Reciprocal
-            if m > 0: #Transpose line depending on quadrant based on m
-                if m >= 1:
-                    y1 = nr*(Distance)+ midy
-                    y2 = nr*(-Distance) + midy
-                    x1 = midx + Distance
-                    x2 = midx - Distance
-                if m < 1:
-                    y1 = midy + Distance
-                    y2 = midy - Distance
-                    x1 = (Distance/nr) + midx
-                    x2 = (-Distance/nr)+ midx
-            if m < 0:
-                if m >= -1:
-                    y1 = midy + Distance
-                    y2 = midy - Distance
-                    x1 = (Distance/nr) + midx
-                    x2 = (-Distance/nr)+ midx
-                if m < -1:
-                    y1 = nr*(Distance)+ midy
-                    y2 = nr*(-Distance) + midy
-                    x1 = midx + Distance
-                    x2 = midx - Distance
-        geom1 = QgsGeometry.fromPolyline([QgsPoint(x1,y1),QgsPoint(midx,midy),QgsPoint(x2,y2)])
-        fet.setGeometry(geom1)
-        for field in fields:
-            fet[field.name()] = feature[field.name()]
-        keepNodes.update([(midx,midy)])
-        FID = feature[Calculate_Distance_By]
-        FID2 = '%sB'%(FID)
-        if FID not in Lengths:
-            G.add_weighted_edges_from(edges[FID])
-            Source = G.nodes()[0]
-            for n in range(2):
-                Length,Path = nx.single_source_dijkstra(G,Source,weight='weight')
-                Index = max(Length,key=Length.get)
-                Source = Path[Index][-1]
-            Lengths[FID] = Length
+            if m < 1:
+                y1 = midy + Distance
+                y2 = midy - Distance
+                x1 = (Distance/nr) + midx
+                x2 = (-Distance/nr)+ midx
+        if m < 0:
+            if m >= -1:
+                y1 = midy + Distance
+                y2 = midy - Distance
+                x1 = (Distance/nr) + midx
+                x2 = (-Distance/nr)+ midx
+            if m < -1:
+                y1 = nr*(Distance)+ midy
+                y2 = nr*(-Distance) + midy
+                x1 = midx + Distance
+                x2 = midx - Distance
+    geom1 = QgsGeometry.fromPolyline([QgsPoint(x1,y1),QgsPoint(midx,midy),QgsPoint(x2,y2)])
+    fet.setGeometry(geom1)
+    for field in fields:
+        fet[field.name()] = feature[field.name()]
+    keepNodes.update([(midx,midy)])
+    FID = feature[Calculate_Distance_By]
+    FID2 = '%sB'%(FID)
+    if FID not in Lengths:
+        G.add_weighted_edges_from(edges[FID])
+        Source = G.nodes()[0]
+        for n in range(2):
             Length,Path = nx.single_source_dijkstra(G,Source,weight='weight')
-            Lengths[FID2] = Length
-            fet["Distance"]=Lengths[FID][(midx,midy)]
-            fet["RDistance"]=Lengths[FID2][(midx,midy)]
-            G.clear()
-        else:
-            fet["Distance"]=Lengths[FID][(midx,midy)]
-            fet["RDistance"]=Lengths[FID2][(midx,midy)]
-        startx,starty = midx,midy
-        midx,midy = endx,endy
-        writer.addFeature(fet)
-    except Exception:
-        continue
+            Index = max(Length,key=Length.get)
+            Source = Path[Index][-1]
+        Lengths[FID] = Length
+        Length,Path = nx.single_source_dijkstra(G,Source,weight='weight')
+        Lengths[FID2] = Length
+        fet["Distance"]=Lengths[FID][(midx,midy)]
+        fet["RDistance"]=Lengths[FID2][(midx,midy)]
+        G.clear()
+    else:
+        fet["Distance"]=Lengths[FID][(midx,midy)]
+        fet["RDistance"]=Lengths[FID2][(midx,midy)]
+    startx,starty = midx,midy
+    midx,midy = endx,endy
+    writer.addFeature(fet)
+
 del writer
 
 progress.setText('Intersecting With Mask')
