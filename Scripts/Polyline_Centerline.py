@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
 ##Voronoi_Lines=vector
 ##Method=string ShortestPath
 ##Groupby_Field=field Voronoi_Lines
+##Seed=number 1
 ##Output=output vector
 
 #Algorithm body
@@ -81,8 +82,9 @@ for enum,FID in enumerate(edges):
             G.remove_nodes_from(keepNodes)
         data.update(G.nodes())
     else:
-        Index = len(G.nodes())/2
-        source = G.nodes()[Index]
+        if len(G.nodes()) < Seed:
+            Seed == len(G.nodes())/2
+        source = G.nodes()[Seed]
         for n in range(2):
             length,path = nx.single_source_dijkstra(G,source,weight='weight')
             Index = max(length,key=length.get)
