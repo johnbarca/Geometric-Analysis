@@ -35,7 +35,7 @@ from itertools import chain
 import processing as st
 
 keepNodes = set([])
-layer = st.getObject(Polygon)
+layer = st.getobject(Polygon)
 
 fields = QgsFields()
 fields.append( QgsField( "id", QVariant.Int ))
