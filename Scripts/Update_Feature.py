@@ -52,7 +52,7 @@ for n,g in df.groupby(Groupby_Fields):
         else:
             data[d].extend(value)
 
-layer = st.getObject(Target_Feature)
+layer = st.getobject(Target_Feature)
 
 if layer.fieldNameIndex(Update_Field) == -1:
     layer.dataProvider().addAttributes([QgsField(Update_Field,QVariant.Double)])

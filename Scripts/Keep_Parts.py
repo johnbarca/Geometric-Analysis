@@ -35,7 +35,7 @@ from qgis.core import *
 from PyQt4.QtCore import *
 import processing as st
 
-layer = st.getObject(Polygon)
+layer = st.getobject(Polygon)
 
 fields= layer.pendingFields()
 crs = layer.crs()

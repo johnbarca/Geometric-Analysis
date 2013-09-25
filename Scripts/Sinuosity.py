@@ -31,7 +31,7 @@ from PyQt4.QtCore import QVariant
 from qgis.core import *
 from math import sqrt
 
-layer = st.getObject(Centerline)
+layer = st.getobject(Centerline)
 if layer.fieldNameIndex("Sinuosity") == -1:
     layer.dataProvider().addAttributes([QgsField("Sinuosity",QVariant.Double)])
 Total = layer.featureCount()
