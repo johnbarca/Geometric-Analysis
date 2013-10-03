@@ -103,7 +103,8 @@ for enum,feature in enumerate(layer.getFeatures()):
 		endx,endy = pnt[-1][0],pnt[-1][1]
 		m = ((starty - endy)/(startx - endx)) #Slope
 		nr = -1*((startx - endx)/(starty - endy))#Negative Reciprocal
-		inter = feats[feature[Calculate_Distance_By]]
+		FID = feature[Calculate_Distance_By]	
+		inter = feats[FID]
 		if Max_Width_Optional:
 			Distance = eval(Max_Width_Optional)
 		else:
@@ -202,7 +203,7 @@ for enum,feature in enumerate(layer.getFeatures()):
 		for field in fields:
 		    fet[field.name()] = feature[field.name()]
 		keepNodes.update([(midx,midy)])
-		FID = feature[Calculate_Distance_By]
+		
 		FID2 = '%sB'%(FID)
 		if FID not in Lengths:
 		    G.add_weighted_edges_from(edges[FID])
