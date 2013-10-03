@@ -1,0 +1,7 @@
+v.build.polylines
+v.build.polylines - Builds polylines from lines or boundaries.
+Vector (v.*)
+ParameterVector|input|Input layer|1|False
+ParameterSelection|cats|cats|no;first;multi
+OutputVector|output|Polyline
+
