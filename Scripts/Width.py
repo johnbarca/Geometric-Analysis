@@ -51,9 +51,9 @@ edges = {}
 
 layer.startEditing()
 layer.commitChanges() #Force creation of fields mentioned above
+Total = layer.featureCount()
 
 if Calculate_Distance_By_Optional:
-        Total = layer.featureCount()
 	progress.setText('Calculating Edges')
 	for enum,feature in enumerate(layer.getFeatures()):
 	    progress.setPercentage(int((100 * enum)/Total))
