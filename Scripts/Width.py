@@ -51,8 +51,9 @@ edges = {}
 
 layer.startEditing()
 layer.commitChanges() #Force creation of fields mentioned above
-Total = layer.featureCount()
+
 if Calculate_Distance_By_Optional:
+        Total = layer.featureCount()
 	progress.setText('Calculating Edges')
 	for enum,feature in enumerate(layer.getFeatures()):
 	    progress.setPercentage(int((100 * enum)/Total))
@@ -92,8 +93,7 @@ for enum,feature in enumerate(layer.getFeatures()):
 		    midx,midy = pnt[-1][0],pnt[-1][1]
 		    ID = feature[Calculate_Width_By]
 		    continue
-		geom1 = QgsGeometry.fromPoint(QgsPoint(midx,midy))
-		geom2 = geom1
+
 		endx,endy = pnt[-1][0],pnt[-1][1]
 		m = ((starty - endy)/(startx - endx)) #Slope
 		nr = -1*((startx - endx)/(starty - endy))#Negative Reciprocal
