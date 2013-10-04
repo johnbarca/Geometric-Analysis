@@ -173,6 +173,8 @@ for enum,feature in enumerate(layer.getFeatures()):
 			
 		else: #single intersection
 			x1,y1 = data.asPoint()
+			if (x1,y1) == (0,0): #Line does not intersect - Max Distance too low?
+				continue
 
 		
 		data = geom2.intersection(inter.geometry())
@@ -188,6 +190,8 @@ for enum,feature in enumerate(layer.getFeatures()):
 					Length = curLength
 		else: #single intersection
 			x2,y2 = data.asPoint()
+			if (x2,y2) == (0,0): #Line does not intersect - Max Distance too low?
+				continue
 		
 		geom1 = QgsGeometry.fromPolyline([QgsPoint(x1,y1),QgsPoint(midx,midy)]) #Recalculate each segment
 		geom2 = QgsGeometry.fromPolyline([QgsPoint(midx,midy),QgsPoint(x2,y2)])	#Recalculate each segment	
