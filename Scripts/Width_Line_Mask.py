@@ -25,12 +25,11 @@
 #==================================
 ##[SAFARI]=group
 ##Centerline=vector
-##Mask=vector
+##Polyline_Mask=vector
 ##Calculate_Width_By=field Centerline
 ##Calculate_Distance_By=field Centerline
 ##Custom_Distance_Field_Optional=string 
 ##Max_Width_Optional=string
-##Threshold=number 100
 ##Width=output vector
 
 #Algorithm body
@@ -43,16 +42,16 @@ from math import sqrt
 
 Lengths = {}
 layer = st.getobject(Centerline)
-layer2 = st.getobject(Mask)
+layer2 = st.getobject(Polyline_Mask)
 
 if layer.fieldNameIndex("Distance") == -1:
     layer.dataProvider().addAttributes([QgsField("Distance",QVariant.Double)])
 if layer.fieldNameIndex("RDistance") == -1:
     layer.dataProvider().addAttributes([QgsField("RDistance",QVariant.Double)])
-if layer.fieldNameIndex("Code") == -1:
-    layer.dataProvider().addAttributes([QgsField("Code",QVariant.Int)])
 if layer.fieldNameIndex("Width") == -1:
     layer.dataProvider().addAttributes([QgsField("Width",QVariant.Double)])
+if layer.fieldNameIndex("Diff") == -1:
+    layer.dataProvider().addAttributes([QgsField("Diff",QVariant.Double)])
 edges = {}
 feats = [f for f in layer2.getFeatures()]
 layer.startEditing()
@@ -173,6 +172,8 @@ for enum,feature in enumerate(layer.getFeatures()):
 		else: #single intersection
 			x1,y1 = data.asPoint()
 			if (x1,y1) == (0,0): #Line does not intersect - Max Distance too low?
+				startx,starty = midx,midy
+				midx,midy = endx,endy
 				continue
 
 		
@@ -190,17 +191,13 @@ for enum,feature in enumerate(layer.getFeatures()):
 		else: #single intersection
 			x2,y2 = data.asPoint()
 			if (x2,y2) == (0,0): #Line does not intersect - Max Distance too low?
+				startx,starty = midx,midy
+				midx,midy = endx,endy
 				continue
 		
 		geom1 = QgsGeometry.fromPolyline([QgsPoint(x1,y1),QgsPoint(midx,midy)]) #Recalculate each segment
 		geom2 = QgsGeometry.fromPolyline([QgsPoint(midx,midy),QgsPoint(x2,y2)])	#Recalculate each segment	
-			
-		d = [geom1.length(),geom2.length()]
-		e = 100-((min(d)/max(d)) * 100)
-		if e < Threshold:
-			Code = 1
-		else:
-			Code = 0
+
 		geom = QgsGeometry.fromPolyline([QgsPoint(x1,y1),QgsPoint(midx,midy),QgsPoint(x2,y2)]) #Create line if its below threshold
 		fet.setGeometry(geom)
 		for field in fields:
@@ -219,9 +216,10 @@ for enum,feature in enumerate(layer.getFeatures()):
 		    Lengths[FID2] = Length
 
 		    G.clear()
+		Widths = [geom1.length(),geom2.length()]
 		try:
 			fet["Width"]=geom.length()
-			fet["Code"]=Code
+			fet["Diff"]= 100-(min(Widths)/max(Widths))*100
 			fet["Distance"]=Lengths[FID][(midx,midy)]   
 			fet["RDistance"]=Lengths[FID2][(midx,midy)] 
 		except Exception:
